@@ -8,67 +8,67 @@ import java.io.InputStreamReader;
 * This is a machine. Which can talk.
 */
 public class TalkingMachine {
-	
+  
   private final static String WELCOME = "Hi comrade, I am a game balancer. Here's how I work : "
-  		+ "you give me a list of 10 players to eat, and I will split them up in two teams. "
-  		+ "Of course I will try my best to do something as balanced as possible, "
-  		+ "given my player knowledge. Please keep in mind that I will only consider "
-  		+ "personal skills, and that there are currently no communication skills/synergies "
-  		+ "taken into account. If you want more than this you will have to make a small "
-      + "jump into the future, and take a look at what I will have become by then.";
+  + "you give me a list of 10 players to eat, and I will split them up in two teams. "
+  + "Of course I will try my best to do something as balanced as possible, "
+  + "given my player knowledge. Please keep in mind that I will only consider "
+  + "personal skills, and that there are currently no communication skills/synergies "
+  + "taken into account. If you want more than this you will have to make a small "
+  + "jump into the future, and take a look at what I will have become by then.";
   
   private final static String PLAYERS = "Here is the list of the players I know, which you can feed "
-  		+ "me with : " 
-		+ NameFormater.AGO + ", " 
-		+ NameFormater.BAKAI + ", " 
-		+ NameFormater.BARBIE + ", "
-		+ NameFormater.BYA + ", " 
-		+ NameFormater.CRISTA + ", " 
-		+ NameFormater.DD + ", " 
-		+ NameFormater.DELZUR + ", "
-		+ NameFormater.DOYL + ", " 
-		+ NameFormater.DRAHL + ", " 
-		+ NameFormater.FLECHE + ", " 
-		+ NameFormater.GARGA + ", " 
-		+ NameFormater.HAMNISTIE + ", "
-		+ NameFormater.HINO + ", " 
-		+ NameFormater.IMMO + ", " 
-		+ NameFormater.LUNIWA + ", "
-		+ NameFormater.MELO + ", " 
-		+ NameFormater.PEG + ", " 
-		+ NameFormater.RIKOS + ", " 
-		+ NameFormater.SAKO + ", " 
-		+ NameFormater.SNAKEUH + ", " 
-		+ NameFormater.STAZZ + ", " 
-		+ NameFormater.SWIFTH + ", " 
-		+ NameFormater.THIIB + ", " 
-		+ NameFormater.VICO + ", " 
-		+ NameFormater.WAUN + ", " 
-		+ NameFormater.YAYIA + ".";
+  + "me with : " 
+  + NameFormater.AGO + ", " 
+  + NameFormater.BAKAI + ", " 
+  + NameFormater.BARBIE + ", "
+  + NameFormater.BYA + ", " 
+  + NameFormater.CRISTA + ", " 
+  + NameFormater.DD + ", " 
+  + NameFormater.DELZUR + ", "
+  + NameFormater.DOYL + ", " 
+  + NameFormater.DRAHL + ", " 
+  + NameFormater.FLECHE + ", " 
+  + NameFormater.GARGA + ", " 
+  + NameFormater.HAMNISTIE + ", "
+  + NameFormater.HINO + ", " 
+  + NameFormater.IMMO + ", " 
+  + NameFormater.LUNIWA + ", "
+  + NameFormater.MELO + ", " 
+  + NameFormater.PEG + ", " 
+  + NameFormater.RIKOS + ", " 
+  + NameFormater.SAKO + ", " 
+  + NameFormater.SNAKEUH + ", " 
+  + NameFormater.STAZZ + ", " 
+  + NameFormater.SWIFTH + ", " 
+  + NameFormater.THIIB + ", " 
+  + NameFormater.VICO + ", " 
+  + NameFormater.WAUN + ", " 
+  + NameFormater.YAYIA + ".";
   
   private final static String EXPLAIN = "\nPlease give me 10 player names so I can try to "
-  		+ "balance something out. Separated by spaces, would be cool (actually if you don't do it, I won't work anyway). Enter \"exit\" to quit.\n";
+  + "balance something out. Separated by spaces, would be cool (actually if you don't do it, I won't work anyway). Enter \"exit\" to quit.\n";
   private final static String COMMUNITY_EXPLAIN = "If an unknown player is here and you want to specify a community score for him, " 
-      + ", please compare him to another I know with an \"=\". For instance : \"NewGuy=Sako\". I will manage something with this.";
+  + ", please compare him to another I know with an \"=\". For instance : \"NewGuy=Sako\". I will manage something with this.";
   private final static String INPUT = "Input field : ";    
   private final static String INPUT_ERROR = "\nObviously, you didn't put the right number of people in there, comrade. "
-  		+ "I need a pair number ! Try again please. (... Or maybe you did it on purpose ? You wouldn't "
-  		+ "do that, would you ?)(I KNEW IT)(COMPUTERS ARE SMARTER THAN MEN)(YOU DON'T STAND A CHANCE)";
+  + "I need a pair number ! Try again please. (... Or maybe you did it on purpose ? You wouldn't "
+  + "do that, would you ?)(I KNEW IT)(COMPUTERS ARE SMARTER THAN MEN)(YOU DON'T STAND A CHANCE)";
   private final static String PLAYER_ERROR = "Sorry, something went wrong with the names you gave me. "
-  		+ "Please check the spelling, you can do it.";
+  + "Please check the spelling, you can do it.";
   private final static String SORRY_ERROR = "\n... Something went wrong. I am so very confuse about it. Here is the error message (and, as a reminder, " 
-      + "probable HTTP Error codes will follow) :";
+  + "probable HTTP Error codes will follow) :";
   private final static String HTTP_MESSAGES = "Main HTTP error codes :\n- 400 : Bad request\n" 
-      + "- 401 : Unauthorized\n"
-      + "- 404 : Stat data not found\n"
-      + "- 429 : Rate limit exceeded (means please wait a minute, but this SHOULD NOT have happened though, I have a rock-solid security check on that end)(... Rock-solid, I tell you)\n"
-      + "- 500 : Internal Riot server error (not your fault, cheers)\n"
-      + "- 503 : Service unavailable (not your fault again)";
-      
+  + "- 401 : Unauthorized\n"
+  + "- 404 : Stat data not found\n"
+  + "- 429 : Rate limit exceeded (means please wait a minute, but this SHOULD NOT have happened though, I have a rock-solid security check on that end)(... Rock-solid, I tell you)\n"
+  + "- 500 : Internal Riot server error (not your fault, cheers)\n"
+  + "- 503 : Service unavailable (not your fault again)";
+  
   private BufferedReader br;
-
+  
   public TalkingMachine() {
-	  this.br = new BufferedReader(new InputStreamReader(System.in));
+    this.br = new BufferedReader(new InputStreamReader(System.in));
   }
   
   /**
@@ -76,7 +76,7 @@ public class TalkingMachine {
   * the software is his friend. But it's actually a TRAP ! Beware the machines !
   */
   public void intro() {
-	  System.out.println(WELCOME + "\n");
+    System.out.println(WELCOME + "\n");
     System.out.println(PLAYERS + "\n");
   }
   
@@ -85,32 +85,32 @@ public class TalkingMachine {
   */
   public String ask() {
     String line = "";
-	  try {
-	    System.out.println(EXPLAIN);
+    try {
+      System.out.println(EXPLAIN);
       System.out.print(INPUT);
-     
+      
       line = this.br.readLine();    
       if(line.equals("exit")) {   // Ugly, ugly, ugly. Ugly.
         this.close();
         System.exit(0);
       }
     }
-  	catch (IOException e) {
-	    System.out.println("EXPLOSIOOOONS, BAAAAM, BABOUM, CRRRASHBRBRBRLRBLR, EXPLOSIONS AND FIIIIRE !\n(... Couldn't close the BufferedReader OR read your line properly," +
-	    " this usually doesn't happen, which means you OBVIOUSLY didn't behave, so you deserved it. Hop.)(TalkingMachine, ask() method)");
-	    System.exit(-1);
-	  }
-	  return line;
+    catch (IOException e) {
+      System.out.println("EXPLOSIOOOONS, BAAAAM, BABOUM, CRRRASHBRBRBRLRBLR, EXPLOSIONS AND FIIIIRE !\n(... Couldn't close the BufferedReader OR read your line properly," +
+      " this usually doesn't happen, which means you OBVIOUSLY didn't behave, so you deserved it. Hop.)(TalkingMachine, ask() method)");
+      System.exit(-1);
+    }
+    return line;
   }
   
   public void inputError() {
-	  System.out.println(INPUT_ERROR);
+    System.out.println(INPUT_ERROR);
   }
   
   public void playerError() {
-	  System.out.println(PLAYER_ERROR);
+    System.out.println(PLAYER_ERROR);
   }
-
+  
   public void sorryError(String message) {
     System.out.println(SORRY_ERROR);
     System.out.println(message);
@@ -122,21 +122,21 @@ public class TalkingMachine {
   * to our beloved user. God bless him.
   */
   public void showResults(Team[] teams) {
-	StringBuilder result = new StringBuilder();
+    StringBuilder result = new StringBuilder();
     result.append("I made the following selection : \n");
     result.append("Team A : ");
     for (int i = 0 ; i < teams[0].getPlayerNumber() ; i++) {
       for (String name : teams[0].get(i).getPlayers().keySet())
-        result.append(name + " - ");
+      result.append(name + " - ");
     }
     result.deleteCharAt(result.length()-2);
     result.append("\nTotal A value : " + teams[0].getValue());
-      
+    
     result.append("\nTeam B : ");
     for (int i = 0 ; i < teams[1].getPlayerNumber() ; i++) {
-        for (String name : teams[1].get(i).getPlayers().keySet())
-          result.append(name + " - ");
-      }
+      for (String name : teams[1].get(i).getPlayers().keySet())
+      result.append(name + " - ");
+    }
     result.deleteCharAt(result.length()-2);
     result.append("\nTotal B value : " + teams[1].getValue());
     System.out.println(result);
@@ -151,15 +151,15 @@ public class TalkingMachine {
     }
   }
   
-	/** Deprecated. Don't use please. Trying to call this function would EFFECTIVELY 
-	* break the matrix and bring chaos on Earth. We would be launched into a destructive
-	* war against armies of angry machines, the world would be consumed, we would have to hide
-	* underground while billions of humans are enslaved by computers, and our only
-	* hope would be to find the Chosen One so he can free us from the evil machine domination.
-	*
-	* ... Really, don't do this.
-	* @deprecated
-	*/
+  /** Deprecated. Don't use please. Trying to call this function would EFFECTIVELY 
+  * break the matrix and bring chaos on Earth. We would be launched into a destructive
+  * war against armies of angry machines, the world would be consumed, we would have to hide
+  * underground while billions of humans are enslaved by computers, and our only
+  * hope would be to find the Chosen One so he can free us from the evil machine domination.
+  *
+  * ... Really, don't do this.
+  * @deprecated
+  */
   public static void talk() {
     System.out.println(WELCOME + "\n");
     System.out.println(PLAYERS + "\n");
@@ -170,58 +170,59 @@ public class TalkingMachine {
     while (!stop) {
       System.out.println(EXPLAIN);
       System.out.print(INPUT);
-     
+      
       String line = ""; 
       try {
-	 	line = br.readLine();
-	  } catch (IOException e) {
-		  System.out.println("\nError reading your line, I am sorry but I must terminate now. This was fatal to me.\n");
-		  System.exit(-1);
-	  }
+        line = br.readLine();
+      } catch (IOException e) {
+        System.out.println("\nError reading your line, I am sorry but I must terminate now. This was fatal to me.\n");
+        System.exit(-1);
+      }
       
-    if(line.equals("exit")) {
-      break;
+      if(line.equals("exit")) {
+        break;
+      }
+      String[] names = line.split(" ");
+      Balancer balance = new Balancer();
+      try {
+        PlayerGroup[] players = new PlayerGroup[names.length];
+        for (int i = 0 ; i < names.length ; i++) {
+          double value = Math.random()*40;     // Since the method is not used anymore, I wanted to add a funny part here.
+          players[i] = new PlayerGroup(names[i], value);
+        }
+        Team[] teams = balance.run(players);      // That is how the balancer used to work. Now everyone has a random value though, so it will be a bit funny.
+        StringBuilder result = new StringBuilder();
+        result.append("I made the following selection : \n");
+        result.append("Team A : ");
+        for (int i = 0 ; i < teams[0].getPlayerNumber() ; i++) {
+          for (String name : teams[0].get(i).getPlayers().keySet())
+          result.append(name + " - ");
+        }
+        result.deleteCharAt(result.length()-2);
+        result.append("\nTotal A value : " + teams[0].getValue());
+        
+        result.append("\nTeam B : ");
+        for (int i = 0 ; i < teams[1].getPlayerNumber() ; i++) {
+          for (String name : teams[1].get(i).getPlayers().keySet())
+          result.append(name + " - ");
+        }
+        result.deleteCharAt(result.length()-2);
+        result.append("\nTotal B value : " + teams[1].getValue());
+        System.out.println(result);
+      }
+      catch (IllegalArgumentException e) {
+        System.out.println(INPUT_ERROR);
+      } catch (IllegalStateException e) {
+        System.out.println(PLAYER_ERROR);
+      }
     }
-    String[] names = line.split(" ");
-    Balancer balance = new Balancer();
     try {
-    	PlayerGroup[] players = new PlayerGroup[names.length];
-		  for (int i = 0 ; i < names.length ; i++) {
-	      double value = Math.random()*40;     // Since the method is not used anymore, I wanted to add a funny part here.
-		    players[i] = new PlayerGroup(names[i], value);
-		  }
-      Team[] teams = balance.run(players);      // That is how the balancer used to work. Now everyone has a random value though, so it will be a bit funny.
-      StringBuilder result = new StringBuilder();
-      result.append("I made the following selection : \n");
-      result.append("Team A : ");
-      for (int i = 0 ; i < teams[0].getPlayerNumber() ; i++) {
-        for (String name : teams[0].get(i).getPlayers().keySet())
-          result.append(name + " - ");
-      }
-      result.deleteCharAt(result.length()-2);
-      result.append("\nTotal A value : " + teams[0].getValue());
-      
-      result.append("\nTeam B : ");
-      for (int i = 0 ; i < teams[1].getPlayerNumber() ; i++) {
-        for (String name : teams[1].get(i).getPlayers().keySet())
-          result.append(name + " - ");
-      }
-      result.deleteCharAt(result.length()-2);
-      result.append("\nTotal B value : " + teams[1].getValue());
-      System.out.println(result);
+      br.close();
+    } catch (IOException e) {
+      System.out.println("EXPLOSIOOOONS, BAAAAM, BABOUM, CRRRASHBRBRBRLRBLR, EXPLOSIONS AND FIIIIRE !\n(... Couldn't close the BufferedReader," +
+      "this usually doesn't happen, you OBVIOUSLY didn't behave, so you deserved it. Hop.)(TalkingMachine, talk() method)");
+      System.exit(-1);
     }
-    catch (IllegalArgumentException e) {
-      System.out.println(INPUT_ERROR);
-    } catch (IllegalStateException e) {
-		  System.out.println(PLAYER_ERROR);
-	  }
   }
-  try {
-	  br.close();
-	} catch (IOException e) {
-	  System.out.println("EXPLOSIOOOONS, BAAAAM, BABOUM, CRRRASHBRBRBRLRBLR, EXPLOSIONS AND FIIIIRE !\n(... Couldn't close the BufferedReader," +
-	  "this usually doesn't happen, you OBVIOUSLY didn't behave, so you deserved it. Hop.)(TalkingMachine, talk() method)");
-	  System.exit(-1);
-	}
 }
-}
+

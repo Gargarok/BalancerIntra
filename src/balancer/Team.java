@@ -24,7 +24,7 @@ public class Team {
   }
   
   public PlayerGroup get(int i) {
-	return this.players[i];
+    return this.players[i];
   }
   
   /**
@@ -32,7 +32,7 @@ public class Team {
   * previous group at the i index. They were bad anyway.
   */
   public void replace(int i, PlayerGroup pg) {
-	this.totalvalue = this.totalvalue - this.players[i].getTotalValue() + pg.getTotalValue();
+    this.totalvalue = this.totalvalue - this.players[i].getTotalValue() + pg.getTotalValue();
     this.players[i] = pg;
   }
   
@@ -40,8 +40,8 @@ public class Team {
   * The weakest group I give you back here is ERASED from my team. Good to know, right ?
   */
   public PlayerGroup giveAwayWeakest() {
-	PlayerGroup weakest = new PlayerGroup("", Double.MAX_VALUE);
-	int j = 0;
+    PlayerGroup weakest = new PlayerGroup("", Double.MAX_VALUE);
+    int j = 0;
     for (int i = 0 ; i < this.current_index ; i++) {
       if (this.players[i].getPlayers().keySet().size() == 1 && this.players[i].getTotalValue() < weakest.getTotalValue()) {
         weakest = this.players[i];
@@ -63,3 +63,4 @@ public class Team {
     this.current_index++;
   }
 }
+
