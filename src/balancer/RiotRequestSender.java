@@ -64,7 +64,7 @@ public class RiotRequestSender {
   */
   //TODO: provide a better global stats URL, so we can add the different arguments and get all the ranked stats for all seasons.
   // (For now, we only take into consideration the current season)
-  private final static String DEV_KEY = "?api_key=c70b9b66-6016-4215-923e-013607496910";
+  private final static String DEV_KEY = "?api_key=SECRET_ENCRYPTED_HIDDEN_INVISIBLE_UNTOUCHABLE_KEY_";
   private final static String NAME_URL = "https://euw.api.pvp.net/api/lol/euw/v1.4/summoner/by-name/";
   private final static String RECENT_URL = "https://euw.api.pvp.net/api/lol/euw/v1.3/game/by-summoner/";
   private final static String STATS_URL = "https://euw.api.pvp.net/api/lol/euw/v1.3/stats/by-summoner/";
