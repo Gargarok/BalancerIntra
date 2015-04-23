@@ -62,6 +62,8 @@ public class RiotRequestSender {
   /*
   * Riot URL addresses
   */
+  //TODO: provide a better global stats URL, so we can add the different arguments and get all the ranked stats for all seasons.
+  // (For now, we only take into consideration the current season)
   private final static String DEV_KEY = "?api_key=SECRET_ENCRYPTED_HIDDEN_INVISIBLE_UNTOUCHABLE_KEY";
   private final static String NAME_URL = "https://euw.api.pvp.net/api/lol/euw/v1.4/summoner/by-name/";
   private final static String RECENT_URL = "https://euw.api.pvp.net/api/lol/euw/v1.3/game/by-summoner/";
@@ -75,33 +77,33 @@ public class RiotRequestSender {
   */
   // First group : summoner name, second group : summoner id
   private final static String REGEX_ID = "\"([^\"]*?)\":\\{\"id\":(.*?),";
-    
-    // subType of the game (actually represents which kind of it is, we use it to know if there are wards or not)
+  
+  // subType of the game (actually represents which kind of it is, we use it to know if there are wards or not)
     private final static String REGEX_RECENT_SUBTYPE = "\"subType\":\"(.*?)\",";      
-    
-    private final static String REGEX_RECENT_WARDSTAT = ".*?\"" + RECENT_WARDPLACED + "\":(.*?),";
-    
-    private final static String REGEX_RECENT_STATS_NOWARD = ".*?\"subType\":\".*?\"," +      // Every stat we need except the ward stat
-    ".*?\"" + RECENT_DEATHS + "\":(.*?)," +         // First group : Deaths
-    ".*?\"" + RECENT_MINIONS + "\":(.*?)," +         // etc
-    ".*?\"" + RECENT_KILLS + "\":(.*?)," +         
-    ".*?\"" + RECENT_WIN + "\":(.*?)," +         
-    ".*?\"" + RECENT_HEAL + "\":(.*?)," +         
-    ".*?\"" + RECENT_ASSISTS + "\":(.*?)," +        
-    ".*?\"" + RECENT_DAMAGE + "\":(.*?)," +         
-    ".*?\"" + RECENT_CC + "\":(.*?)";        // We don't need the last comma here, as the cc is the last field in riot request result
-    
-    // Group 1 : contains all the data about one given match. Find each match by looking for
-    // a pattern as follows : "gameId" <bla bla> [<bla>] <bip> {<beulululu>}} (without spaces)
-    private final static String REGEX_RECENT_ALLSTATS = "(\"gameId\".*?\\[.*?\\].*?\\{.*?\\}\\})";
-    
-    // Extracts the summary containing all stats for all queue types
-    private final static String REGEX_GLOBAL_ALLSTATS = "\"playerStatSummaries\":([\\{.*?\\}])\\}";
-    
-    private final static String REGEX_GLOBAL_PERQUEUE = "(\\{\"playerStatSummaryType\".*?\\{.*?\\}\\})";
-    private final static String REGEX_GLOBAL_GAMETYPE = "\"playerStatSummaryType\":\"(.*?)\",";
-    // This one get the stats for the id 0 champion, which contains the total stats for every champ.
-    private final static String REGEX_GLOBAL_RANKEDSTATS = "\"id\":0,(.*?)\\}";
+  
+  private final static String REGEX_RECENT_WARDSTAT = ".*?\"" + RECENT_WARDPLACED + "\":(.*?),";
+  
+  private final static String REGEX_RECENT_STATS_NOWARD = ".*?\"subType\":\".*?\"," +      // Every stat we need except the ward stat
+  ".*?\"" + RECENT_DEATHS + "\":(.*?)," +         // First group : Deaths
+  ".*?\"" + RECENT_MINIONS + "\":(.*?)," +         // etc
+  ".*?\"" + RECENT_KILLS + "\":(.*?)," +         
+  ".*?\"" + RECENT_WIN + "\":(.*?)," +         
+  ".*?\"" + RECENT_HEAL + "\":(.*?)," +         
+  ".*?\"" + RECENT_ASSISTS + "\":(.*?)," +        
+  ".*?\"" + RECENT_DAMAGE + "\":(.*?)," +         
+  ".*?\"" + RECENT_CC + "\":(.*?)";        // We don't need the last comma here, as the cc is the last field in riot request result
+  
+  // Group 1 : contains all the data about one given match. Find each match by looking for
+  // a pattern as follows : "gameId" <bla bla> [<bla>] <bip> {<beulululu>}} (without spaces)
+  private final static String REGEX_RECENT_ALLSTATS = "(\"gameId\".*?\\[.*?\\].*?\\{.*?\\}\\})";
+  
+  // Extracts the summary containing all stats for all queue types
+  private final static String REGEX_GLOBAL_ALLSTATS = "\"playerStatSummaries\":([\\{.*?\\}])\\}";
+  
+  private final static String REGEX_GLOBAL_PERQUEUE = "(\\{\"playerStatSummaryType\".*?\\{.*?\\}\\})";
+  private final static String REGEX_GLOBAL_GAMETYPE = "\"playerStatSummaryType\":\"(.*?)\",";
+  // This one get the stats for the id 0 champion, which contains the total stats for every champ.
+  private final static String REGEX_GLOBAL_RANKEDSTATS = "\"id\":0,(.*?)\\}";
   
   
   /*
@@ -420,63 +422,65 @@ public class RiotRequestSender {
   
   private Double getField(String data, String regex) {
     Pattern regexp = Pattern.compile("\"" + regex + "\":(.*?)[,\\}\\]\n]");
-  Matcher localResult = regexp.matcher(data);
-  boolean found = localResult.find();
-  if (found) {
-    try {
-      return Double.parseDouble(localResult.group(1));
+    Matcher localResult = regexp.matcher(data);
+    boolean found = localResult.find();
+    if (found) {
+      try {
+        return Double.parseDouble(localResult.group(1));
+      }
+      catch (NumberFormatException e) { // Not a number : we expect it to be true or false, ans return 1 for true and 0 for everything else
+        // We consider that the line asking for this field knows what it expects
+        if (localResult.group(1).equals("true")) return 1.0;
+        else return 0.0;
+      }
     }
-    catch (NumberFormatException e) { // Not a number : we expect it to be true or false, ans return 1 for true and 0 for everything else
-      // We consider that the line asking for this field knows what it expects
-      if (localResult.group(1).equals("true")) return 1.0;
-      else return 0.0;
+    return 0.0;
+  }
+  
+  /**
+  * These methods have a debug purpose and are only useful for me, I'm supposed to erase
+  * them as soon as everything is working. However, since I WILL forget
+  * about it, please be so kind as to remind me, thank you mate.
+  * (oh by the way, I saw the "Matrix Reloaded" movie yesterday again, it's
+  * quite funny how they say that once its lifespan is over, a program can either
+  * face deletion or hide. Maybe these methods will try to hide in the matrix
+  * as well, heh ? Well, we shall see about that, for I really intend to erase them).
+  * (... Good luck with your hiding)
+  * @throws IOException : when the universe crashes, we get an exception here from the request sender
+  */
+  //TODO: delete all this
+  public void debugRegexId(String[] names) throws IOException {
+    HashMap<String,Long> idMap = this.getSummonerId(names);
+    for (String name : idMap.keySet()) {
+      System.out.println("Name : " + name + ", id : " + idMap.get(name) + ".");
     }
   }
-  return 0.0;
-}
-
-/**
-* These methods have a debug purpose and are only useful for me, I'm supposed to erase
-* them as soon as everything is working. However, since I WILL forget
-* about it, please be so kind as to remind me, thank you mate.
-* (oh by the way, I saw the "Matrix Reloaded" movie yesterday again, it's
-* quite funny how they say that once its lifespan is over, a program can either
-* face deletion or hide. Maybe these methods will try to hide in the matrix
-* as well, heh ? Well, we shall see about that, for I really intend to erase them).
-* (... Good luck with your hiding)
-* @throws IOException : when the universe crashes, we get an exception here from the request sender
-*/
-//TODO: delete all this
-public void debugRegexId(String[] names) throws IOException {
-  HashMap<String,Long> idMap = this.getSummonerId(names);
-  for (String name : idMap.keySet()) {
-    System.out.println("Name : " + name + ", id : " + idMap.get(name) + ".");
+  
+  //TODO: delete this too
+  public void debugRegexRecent(long id) throws IOException {
+    HashMap<String,Double> statMap = this.getRecentMatches(id);
+    System.out.println("Request recent stats for user number " + id + " : ");
+    for (String field : statMap.keySet()) {
+      System.out.println("Field " + field + " = " + statMap.get(field) + ".");
+    }
+  }
+  
+  //TODO: Yes, yes, this as well, come on let's not repeat that everywhere
+  public void debugRegexTotal(long id) throws IOException {
+    HashMap<String,Double> statMap = this.getTotalStats(id);
+    System.out.println("Request total stats for user number " + id + " : ");
+    for (String field : statMap.keySet()) {
+      System.out.println("Field " + field + " = " + statMap.get(field) + ".");
+    }
+  }
+  
+  //TODO: ...
+  public void debugNameById(long id) throws IOException {
+    System.out.println(this.requestGet("https://euw.api.pvp.net/api/lol/euw/v1.4/summoner/" + id + DEV_KEY));
   }
 }
 
-//TODO: delete this too
-public void debugRegexRecent(long id) throws IOException {
-  HashMap<String,Double> statMap = this.getRecentMatches(id);
-  System.out.println("Request recent stats for user number " + id + " : ");
-  for (String field : statMap.keySet()) {
-    System.out.println("Field " + field + " = " + statMap.get(field) + ".");
-  }
-}
 
-//TODO: Yes, yes, this as well, come on let's not repeat that everywhere
-public void debugRegexTotal(long id) throws IOException {
-  HashMap<String,Double> statMap = this.getTotalStats(id);
-  System.out.println("Request total stats for user number " + id + " : ");
-  for (String field : statMap.keySet()) {
-    System.out.println("Field " + field + " = " + statMap.get(field) + ".");
-  }
-}
-
-//TODO: ...
-public void debugNameById(long id) throws IOException {
-  System.out.println(this.requestGet("https://euw.api.pvp.net/api/lol/euw/v1.4/summoner/" + id + DEV_KEY));
-}
-}
 
 
 

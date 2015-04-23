@@ -14,7 +14,7 @@ import exception.PlayerNameException;
 
 /**
 * Basically this is a debugging main for the IntraBalancer,
-* which lets us take a look at the Riot score calculation alone.
+* which lets us take a look at the performance score calculation alone.
 * It's still pretty funny to use though, but I think the code will be kinda ugly,
 * I don't intend to spend much time on this here, thank you for your understanding,
 * happy birthday.
@@ -55,19 +55,19 @@ public class SoloRiotScore {
         //System.out.println("Total normal score : " + totalStats.get("Total normal score"));
         System.out.println("Total ranked score : " + totalStats.get("Total ranked score"));
         System.out.println("Total experience score : " + totalStats.get("Total experience score"));
-        System.out.println("Global riot score : " + gp.getRiotValue());
+        System.out.println("Global performance score : " + gp.getPerfValue());
         
         System.out.println("\nRECENT STATS : ");
         for (String field : recentStats.keySet()) {
           if (field != "Total recent score" && recentStats.get(field) != 0)
-          System.out.println(field + " : " + recentStats.get(field));
+            System.out.println(field + " : " + recentStats.get(field));
         }  
         System.out.println("--------------");
         
         System.out.println("TOTAL STATS : ");
         for (String field : totalStats.keySet()) {
           if (field != "Total experience score" && field != "Total ranked score" && totalStats.get(field) != 0)
-          System.out.println(field + " : " + totalStats.get(field));
+            System.out.println(field + " : " + totalStats.get(field));
         }
         System.out.println("--------------");
       }
@@ -83,4 +83,6 @@ public class SoloRiotScore {
     }    
   }
 }
+
+
 

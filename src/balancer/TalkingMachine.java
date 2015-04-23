@@ -10,60 +10,61 @@ import java.io.InputStreamReader;
 public class TalkingMachine {
   
   private final static String WELCOME = "Hi comrade, I am a game balancer. Here's how I work : "
-  + "you give me a list of 10 players to eat, and I will split them up in two teams. "
-  + "Of course I will try my best to do something as balanced as possible, "
-  + "given my player knowledge. Please keep in mind that I will only consider "
-  + "personal skills, and that there are currently no communication skills/synergies "
-  + "taken into account. If you want more than this you will have to make a small "
-  + "jump into the future, and take a look at what I will have become by then.";
+    + "you give me a list of 10 players to eat, and I will split them up in two teams. "
+    + "Of course I will try my best to do something as balanced as possible, "
+    + "given my player knowledge. Please keep in mind that I will only consider "
+    + "personal skills, and that there are currently no communication skills/synergies "
+    + "taken into account. If you want more than this you will have to make a small "
+    + "jump into the future, and take a look at what I will have become by then.";
   
   private final static String PLAYERS = "Here is the list of the players I know, which you can feed "
-  + "me with : " 
-  + NameFormater.AGO + ", " 
-  + NameFormater.BAKAI + ", " 
-  + NameFormater.BARBIE + ", "
-  + NameFormater.BYA + ", " 
-  + NameFormater.CRISTA + ", " 
-  + NameFormater.DD + ", " 
-  + NameFormater.DELZUR + ", "
-  + NameFormater.DOYL + ", " 
-  + NameFormater.DRAHL + ", " 
-  + NameFormater.FLECHE + ", " 
-  + NameFormater.GARGA + ", " 
-  + NameFormater.HAMNISTIE + ", "
-  + NameFormater.HINO + ", " 
-  + NameFormater.IMMO + ", " 
-  + NameFormater.LUNIWA + ", "
-  + NameFormater.MELO + ", " 
-  + NameFormater.PEG + ", " 
-  + NameFormater.RIKOS + ", " 
-  + NameFormater.SAKO + ", " 
-  + NameFormater.SNAKEUH + ", " 
-  + NameFormater.STAZZ + ", " 
-  + NameFormater.SWIFTH + ", " 
-  + NameFormater.THIIB + ", " 
-  + NameFormater.VICO + ", " 
-  + NameFormater.WAUN + ", " 
-  + NameFormater.YAYIA + ".";
+    + "me with : " 
+    + NameFormater.AGO + ", " 
+    + NameFormater.BAKAI + ", " 
+    + NameFormater.BARBIE + ", "
+    + NameFormater.BYA + ", " 
+    + NameFormater.CRISTA + ", " 
+    + NameFormater.DD + ", " 
+    + NameFormater.DELZUR + ", "
+    + NameFormater.DOYL + ", " 
+    + NameFormater.DRAHL + ", " 
+    + NameFormater.FLECHE + ", " 
+    + NameFormater.GARGA + ", " 
+    + NameFormater.HAMNISTIE + ", "
+    + NameFormater.HINO + ", " 
+    + NameFormater.IMMO + ", " 
+    + NameFormater.LUNIWA + ", "
+    + NameFormater.MELO + ", " 
+    + NameFormater.PEG + ", " 
+    + NameFormater.RIKOS + ", " 
+    + NameFormater.SAKO + ", " 
+    + NameFormater.SNAKEUH + ", " 
+    + NameFormater.STAZZ + ", " 
+    + NameFormater.SWIFTH + ", " 
+    + NameFormater.THIIB + ", " 
+    + NameFormater.VICO + ", " 
+    + NameFormater.WAUN + ", " 
+    + NameFormater.YAYIA + ".";
   
   private final static String EXPLAIN = "\nPlease give me 10 player names so I can try to "
-  + "balance something out. Separated by spaces, would be cool (actually if you don't do it, I won't work anyway). Enter \"exit\" to quit.\n";
+    + "balance something out. Separated by spaces, would be cool (actually if you don't do it, I won't work anyway). Enter \"exit\" to quit.\n";
   private final static String COMMUNITY_EXPLAIN = "If an unknown player is here and you want to specify a community score for him, " 
-  + ", please compare him to another I know with an \"=\". For instance : \"NewGuy=Sako\". I will manage something with this.";
+    + ", please compare him to another I know with an \"=\". For instance : \"NewGuy=Sako\". I will manage something with this. If "
+    + "only the riot performance points are taken into account, you can just ignore this previous statement though.";
   private final static String INPUT = "Input field : ";    
   private final static String INPUT_ERROR = "\nObviously, you didn't put the right number of people in there, comrade. "
-  + "I need a pair number ! Try again please. (... Or maybe you did it on purpose ? You wouldn't "
-  + "do that, would you ?)(I KNEW IT)(COMPUTERS ARE SMARTER THAN MEN)(YOU DON'T STAND A CHANCE)";
+    + "I need a pair number ! Try again please. (... Or maybe you did it on purpose ? You wouldn't "
+    + "do that, would you ?)(I KNEW IT)(COMPUTERS ARE SMARTER THAN MEN)(YOU DON'T STAND A CHANCE)";
   private final static String PLAYER_ERROR = "Sorry, something went wrong with the names you gave me. "
-  + "Please check the spelling, you can do it.";
+    + "Please check the spelling, you can do it.";
   private final static String SORRY_ERROR = "\n... Something went wrong. I am so very confuse about it. Here is the error message (and, as a reminder, " 
-  + "probable HTTP Error codes will follow) :";
+    + "probable HTTP Error codes will follow) :";
   private final static String HTTP_MESSAGES = "Main HTTP error codes :\n- 400 : Bad request\n" 
-  + "- 401 : Unauthorized\n"
-  + "- 404 : Stat data not found\n"
-  + "- 429 : Rate limit exceeded (means please wait a minute, but this SHOULD NOT have happened though, I have a rock-solid security check on that end)(... Rock-solid, I tell you)\n"
-  + "- 500 : Internal Riot server error (not your fault, cheers)\n"
-  + "- 503 : Service unavailable (not your fault again)";
+    + "- 401 : Unauthorized\n"
+    + "- 404 : Stat data not found\n"
+    + "- 429 : Rate limit exceeded (means please wait a minute, but this SHOULD NOT have happened though, I have a rock-solid security check on that end)(... Rock-solid, I tell you)\n"
+    + "- 500 : Internal Riot server error (not your fault, cheers)\n"
+    + "- 503 : Service unavailable (not your fault again)";
   
   private BufferedReader br;
   
@@ -87,6 +88,7 @@ public class TalkingMachine {
     String line = "";
     try {
       System.out.println(EXPLAIN);
+      System.out.println(COMMUNITY_EXPLAIN);
       System.out.print(INPUT);
       
       line = this.br.readLine();    
@@ -127,7 +129,7 @@ public class TalkingMachine {
     result.append("Team A : ");
     for (int i = 0 ; i < teams[0].getPlayerNumber() ; i++) {
       for (String name : teams[0].get(i).getPlayers().keySet())
-      result.append(name + " - ");
+        result.append(name + " - ");
     }
     result.deleteCharAt(result.length()-2);
     result.append("\nTotal A value : " + teams[0].getValue());
@@ -135,7 +137,7 @@ public class TalkingMachine {
     result.append("\nTeam B : ");
     for (int i = 0 ; i < teams[1].getPlayerNumber() ; i++) {
       for (String name : teams[1].get(i).getPlayers().keySet())
-      result.append(name + " - ");
+        result.append(name + " - ");
     }
     result.deleteCharAt(result.length()-2);
     result.append("\nTotal B value : " + teams[1].getValue());
@@ -196,7 +198,7 @@ public class TalkingMachine {
         result.append("Team A : ");
         for (int i = 0 ; i < teams[0].getPlayerNumber() ; i++) {
           for (String name : teams[0].get(i).getPlayers().keySet())
-          result.append(name + " - ");
+            result.append(name + " - ");
         }
         result.deleteCharAt(result.length()-2);
         result.append("\nTotal A value : " + teams[0].getValue());
@@ -204,7 +206,7 @@ public class TalkingMachine {
         result.append("\nTeam B : ");
         for (int i = 0 ; i < teams[1].getPlayerNumber() ; i++) {
           for (String name : teams[1].get(i).getPlayers().keySet())
-          result.append(name + " - ");
+            result.append(name + " - ");
         }
         result.deleteCharAt(result.length()-2);
         result.append("\nTotal B value : " + teams[1].getValue());
@@ -225,4 +227,6 @@ public class TalkingMachine {
     }
   }
 }
+
+
 

@@ -113,9 +113,9 @@ public class RiotScoreCalculator {
     
     // Here we have an id association for every name in our groups.
     // From there we can actually send the statistic requests to riot,
-    // so we can calculate the riot score for every group.
+    // so we can calculate the performance score for every group.
     for (PlayerGroup group : players) {
-      double riotScore = 0;
+      double perfScore = 0;
       
       long id = 0; 
       for (String name : group.getPlayers().keySet()) {
@@ -128,53 +128,53 @@ public class RiotScoreCalculator {
         totalStats = requestSender.getTotalStats(id);
         
         double recentScore = recentStats.get(RiotRequestSender.RECENT_KILLS) * RECENT_KILL_RATIO
-        + recentStats.get(RiotRequestSender.RECENT_ASSISTS) * RECENT_ASSIST_RATIO
-        + recentStats.get(RiotRequestSender.RECENT_DEATHS) * RECENT_DEATH_RATIO
-        + recentStats.get(RiotRequestSender.RECENT_MINIONS) * RECENT_MINION_RATIO
-        + recentStats.get(RiotRequestSender.RECENT_NEXUSKILL) * RECENT_NEXUS_RATIO
-        + recentStats.get(RiotRequestSender.RECENT_DAMAGE) * RECENT_DAMAGE_RATIO
-        + recentStats.get(RiotRequestSender.RECENT_CC) * RECENT_CC_RATIO
-        + recentStats.get(RiotRequestSender.RECENT_WARDPLACED) * RECENT_WARDS_RATIO
-        + recentStats.get(RiotRequestSender.RECENT_WIN) * RECENT_WIN_RATIO
-        + recentStats.get(RiotRequestSender.RECENT_HEAL) * RECENT_HEAL_RATIO;
+          + recentStats.get(RiotRequestSender.RECENT_ASSISTS) * RECENT_ASSIST_RATIO
+          + recentStats.get(RiotRequestSender.RECENT_DEATHS) * RECENT_DEATH_RATIO
+          + recentStats.get(RiotRequestSender.RECENT_MINIONS) * RECENT_MINION_RATIO
+          + recentStats.get(RiotRequestSender.RECENT_NEXUSKILL) * RECENT_NEXUS_RATIO
+          + recentStats.get(RiotRequestSender.RECENT_DAMAGE) * RECENT_DAMAGE_RATIO
+          + recentStats.get(RiotRequestSender.RECENT_CC) * RECENT_CC_RATIO
+          + recentStats.get(RiotRequestSender.RECENT_WARDPLACED) * RECENT_WARDS_RATIO
+          + recentStats.get(RiotRequestSender.RECENT_WIN) * RECENT_WIN_RATIO
+          + recentStats.get(RiotRequestSender.RECENT_HEAL) * RECENT_HEAL_RATIO;
         recentScore /= recentStats.get(RiotRequestSender.RECENT_GAMENB);  // Result is being divided by the number of games
         recentScore *= RECENT_MULTIPLIER;
         
         /*
         double normalOverallScore = totalStats.get(RiotRequestSender.TOTAL_NORMAL_KILLS) * TOTAL_NORMAL_KILL_RATIO
-        + totalStats.get(RiotRequestSender.TOTAL_NORMAL_ASSISTS) * TOTAL_NORMAL_ASSIST_RATIO
-        + totalStats.get(RiotRequestSender.TOTAL_NORMAL_MINIONS) * TOTAL_NORMAL_MINION_RATIO
-        + totalStats.get(RiotRequestSender.TOTAL_NORMAL_TURRETS) * TOTAL_NORMAL_TURRET_RATIO
-        + totalStats.get(RiotRequestSender.TOTAL_NORMAL_NEUTRAL_MINIONS) * TOTAL_NORMAL_NEUTRAL_MINION_RATIO;
+          + totalStats.get(RiotRequestSender.TOTAL_NORMAL_ASSISTS) * TOTAL_NORMAL_ASSIST_RATIO
+          + totalStats.get(RiotRequestSender.TOTAL_NORMAL_MINIONS) * TOTAL_NORMAL_MINION_RATIO
+          + totalStats.get(RiotRequestSender.TOTAL_NORMAL_TURRETS) * TOTAL_NORMAL_TURRET_RATIO
+          + totalStats.get(RiotRequestSender.TOTAL_NORMAL_NEUTRAL_MINIONS) * TOTAL_NORMAL_NEUTRAL_MINION_RATIO;
         normalOverallScore /= (totalStats.get(RiotRequestSender.TOTAL_NORMAL_WINS) * TOTAL_NORMAL_WIN_RATIO);
         */
         
         double experienceScore = (totalStats.get(RiotRequestSender.TOTAL_RANKED_ASSISTS) + totalStats.get(RiotRequestSender.TOTAL_NORMAL_ASSISTS)) * TOTAL_EXP_ASSISTS
-        + (totalStats.get(RiotRequestSender.TOTAL_RANKED_LOSSES) + totalStats.get(RiotRequestSender.TOTAL_RANKED_WON) + totalStats.get(RiotRequestSender.TOTAL_NORMAL_WINS)) * TOTAL_EXP_GAMES
-        + (totalStats.get(RiotRequestSender.TOTAL_RANKED_KILLS) + totalStats.get(RiotRequestSender.TOTAL_NORMAL_KILLS)) * TOTAL_EXP_KILLS
-        + (totalStats.get(RiotRequestSender.TOTAL_RANKED_MINIONS) + totalStats.get(RiotRequestSender.TOTAL_NORMAL_MINIONS)) * TOTAL_EXP_MINIONS
-        + (totalStats.get(RiotRequestSender.TOTAL_RANKED_NEUTRAL_MINIONS) + totalStats.get(RiotRequestSender.TOTAL_NORMAL_NEUTRAL_MINIONS)) * TOTAL_EXP_NEUTRAL_MINIONS
-        + (totalStats.get(RiotRequestSender.TOTAL_RANKED_TURRETS) + totalStats.get(RiotRequestSender.TOTAL_NORMAL_TURRETS)) * TOTAL_EXP_TURRETS
-        + totalStats.get(RiotRequestSender.TOTAL_RANKED_DAMAGE_DONE) * TOTAL_EXP_DAMAGE_DONE
-        + totalStats.get(RiotRequestSender.TOTAL_RANKED_DAMAGE_TAKEN) * TOTAL_EXP_DAMAGE_TAKEN
-        + totalStats.get(RiotRequestSender.TOTAL_RANKED_HEAL) * TOTAL_EXP_HEAL
-        + totalStats.get(RiotRequestSender.TOTAL_RANKED_PENTA) * TOTAL_EXP_PENTA;
+          + (totalStats.get(RiotRequestSender.TOTAL_RANKED_LOSSES) + totalStats.get(RiotRequestSender.TOTAL_RANKED_WON) + totalStats.get(RiotRequestSender.TOTAL_NORMAL_WINS)) * TOTAL_EXP_GAMES
+          + (totalStats.get(RiotRequestSender.TOTAL_RANKED_KILLS) + totalStats.get(RiotRequestSender.TOTAL_NORMAL_KILLS)) * TOTAL_EXP_KILLS
+          + (totalStats.get(RiotRequestSender.TOTAL_RANKED_MINIONS) + totalStats.get(RiotRequestSender.TOTAL_NORMAL_MINIONS)) * TOTAL_EXP_MINIONS
+          + (totalStats.get(RiotRequestSender.TOTAL_RANKED_NEUTRAL_MINIONS) + totalStats.get(RiotRequestSender.TOTAL_NORMAL_NEUTRAL_MINIONS)) * TOTAL_EXP_NEUTRAL_MINIONS
+          + (totalStats.get(RiotRequestSender.TOTAL_RANKED_TURRETS) + totalStats.get(RiotRequestSender.TOTAL_NORMAL_TURRETS)) * TOTAL_EXP_TURRETS
+          + totalStats.get(RiotRequestSender.TOTAL_RANKED_DAMAGE_DONE) * TOTAL_EXP_DAMAGE_DONE
+          + totalStats.get(RiotRequestSender.TOTAL_RANKED_DAMAGE_TAKEN) * TOTAL_EXP_DAMAGE_TAKEN
+          + totalStats.get(RiotRequestSender.TOTAL_RANKED_HEAL) * TOTAL_EXP_HEAL
+          + totalStats.get(RiotRequestSender.TOTAL_RANKED_PENTA) * TOTAL_EXP_PENTA;
         experienceScore *= TOTAL_EXP_MULTIPLIER;
         
         double rankedGameNumber = totalStats.get(RiotRequestSender.TOTAL_RANKED_WON) + totalStats.get(RiotRequestSender.TOTAL_RANKED_LOSSES);
         double rankedWinDifference = totalStats.get(RiotRequestSender.TOTAL_RANKED_WON) - totalStats.get(RiotRequestSender.TOTAL_RANKED_LOSSES);
         
         double rankedOverallScore = (rankedWinDifference / rankedGameNumber) * TOTAL_RANKED_WIN_DIFFERENCE_RATIO
-        + totalStats.get(RiotRequestSender.TOTAL_RANKED_DAMAGE_TAKEN) * TOTAL_RANKED_DAMAGE_TAKEN_RATIO
-        + totalStats.get(RiotRequestSender.TOTAL_RANKED_DAMAGE_DONE) * TOTAL_RANKED_DAMAGE_DONE_RATIO
-        + totalStats.get(RiotRequestSender.TOTAL_RANKED_HEAL) * TOTAL_RANKED_HEAL_RATIO
-        + totalStats.get(RiotRequestSender.TOTAL_RANKED_MINIONS) * TOTAL_RANKED_MINION_RATIO
-        + totalStats.get(RiotRequestSender.TOTAL_RANKED_NEUTRAL_MINIONS) * TOTAL_RANKED_NEUTRAL_MINION_RATIO
-        + totalStats.get(RiotRequestSender.TOTAL_RANKED_DEATHS) * TOTAL_RANKED_DEATH_RATIO
-        + totalStats.get(RiotRequestSender.TOTAL_RANKED_ASSISTS) * TOTAL_RANKED_ASSIST_RATIO
-        + totalStats.get(RiotRequestSender.TOTAL_RANKED_KILLS) * TOTAL_RANKED_KILL_RATIO
-        + totalStats.get(RiotRequestSender.TOTAL_RANKED_PENTA) * TOTAL_RANKED_PENTA_RATIO
-        + totalStats.get(RiotRequestSender.TOTAL_RANKED_TURRETS) * TOTAL_RANKED_TURRET_RATIO;
+          + totalStats.get(RiotRequestSender.TOTAL_RANKED_DAMAGE_TAKEN) * TOTAL_RANKED_DAMAGE_TAKEN_RATIO
+          + totalStats.get(RiotRequestSender.TOTAL_RANKED_DAMAGE_DONE) * TOTAL_RANKED_DAMAGE_DONE_RATIO
+          + totalStats.get(RiotRequestSender.TOTAL_RANKED_HEAL) * TOTAL_RANKED_HEAL_RATIO
+          + totalStats.get(RiotRequestSender.TOTAL_RANKED_MINIONS) * TOTAL_RANKED_MINION_RATIO
+          + totalStats.get(RiotRequestSender.TOTAL_RANKED_NEUTRAL_MINIONS) * TOTAL_RANKED_NEUTRAL_MINION_RATIO
+          + totalStats.get(RiotRequestSender.TOTAL_RANKED_DEATHS) * TOTAL_RANKED_DEATH_RATIO
+          + totalStats.get(RiotRequestSender.TOTAL_RANKED_ASSISTS) * TOTAL_RANKED_ASSIST_RATIO
+          + totalStats.get(RiotRequestSender.TOTAL_RANKED_KILLS) * TOTAL_RANKED_KILL_RATIO
+          + totalStats.get(RiotRequestSender.TOTAL_RANKED_PENTA) * TOTAL_RANKED_PENTA_RATIO
+          + totalStats.get(RiotRequestSender.TOTAL_RANKED_TURRETS) * TOTAL_RANKED_TURRET_RATIO;
         rankedOverallScore /= rankedGameNumber;
         
         rankedOverallScore = (rankedOverallScore > 0) ? rankedOverallScore : 0;
@@ -184,12 +184,14 @@ public class RiotScoreCalculator {
         recentStats.put("Total recent score", recentScore);
         totalStats.put("Total experience score", experienceScore);
         
-        riotScore = (recentScore /*+ normalOverallScore*/ + rankedOverallScore + experienceScore);
+        perfScore = (recentScore /*+ normalOverallScore*/ + rankedOverallScore + experienceScore);
       }
-      group.setRiotValue(riotScore);    
+      group.setPerfValue(perfScore);    
     }
     
     return players;
   }
 }
+
+
 

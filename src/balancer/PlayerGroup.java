@@ -9,21 +9,21 @@ public class PlayerGroup {
   private HashMap<String,Double> players;
   private double total_value;
   private double comm_value;
-  private double riot_value;
+  private double perf_value;
   
   public PlayerGroup(String player, double commValue) {
     players = new HashMap<>();
     players.put(player, commValue);
     total_value = commValue;
     comm_value = commValue;
-    riot_value = 0;
+    perf_value = 0;
   }
   
   public PlayerGroup() {
     players = new HashMap<>();
     total_value = 0;
     comm_value = 0;
-    riot_value = 0;
+    perf_value = 0;
   }
   
   public PlayerGroup(HashMap<String,Double> player) {
@@ -34,14 +34,14 @@ public class PlayerGroup {
       total_value += player.get(s); 
       comm_value += total_value;
     }
-    riot_value = 0;
+    perf_value = 0;
   }
   
-  public void addPlayer(String player, double commValue, double riotValue) {
+  public void addPlayer(String player, double commValue, double perfValue) {
     players.put(player, commValue);
     this.comm_value += commValue;
-    this.riot_value += riotValue;
-    this.total_value += (commValue + riotValue);
+    this.perf_value += perfValue;
+    this.total_value += (commValue + perf_value);
   }
   
   public String[] getNames() {
@@ -66,13 +66,15 @@ public class PlayerGroup {
     return comm_value;
   }
   
-  public double getRiotValue() {
-    return riot_value;
+  public double getPerfValue() {
+    return perf_value;
   }
   
-  public void setRiotValue(double value) {
-    riot_value = value;
-    total_value += riot_value;
+  public void setPerfValue(double value) {
+    perf_value = value;
+    total_value += perf_value;
   }
 }
+
+
 
