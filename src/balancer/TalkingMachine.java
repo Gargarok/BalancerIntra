@@ -18,7 +18,7 @@ public class TalkingMachine {
     + "jump into the future, and take a look at what I will have become by then.";
   
   private final static String PLAYERS = "Here is the list of the players I know, which you can feed "
-    + "me with : " 
+    + "me with if you want to (other than these, it will need to be League of legends nicknames) : " 
     + NameFormater.AGO + ", " 
     + NameFormater.BAKAI + ", " 
     + NameFormater.BARBIE + ", "
@@ -65,6 +65,8 @@ public class TalkingMachine {
     + "- 429 : Rate limit exceeded (means please wait a minute, but this SHOULD NOT have happened though, I have a rock-solid security check on that end)(... Rock-solid, I tell you)\n"
     + "- 500 : Internal Riot server error (not your fault, cheers)\n"
     + "- 503 : Service unavailable (not your fault again)";
+  private final static String EXPLOSION_CRASH = "EXPLOSIOOOONS, BAAAAM, BABOUM, CRRRASHBRBRBRLRBLR, EXPLOSIONS AND FIIIIRE !\n(... Couldn't close the BufferedReader," +
+      "this usually doesn't happen, you OBVIOUSLY didn't behave, so you deserved it. Hop.)";
   
   private BufferedReader br;
   
@@ -98,8 +100,7 @@ public class TalkingMachine {
       }
     }
     catch (IOException e) {
-      System.out.println("EXPLOSIOOOONS, BAAAAM, BABOUM, CRRRASHBRBRBRLRBLR, EXPLOSIONS AND FIIIIRE !\n(... Couldn't close the BufferedReader OR read your line properly," +
-      " this usually doesn't happen, which means you OBVIOUSLY didn't behave, so you deserved it. Hop.)(TalkingMachine, ask() method)");
+      System.out.println(EXPLOSION_CRASH + "(TalkingMachine, ask() method)");
       System.exit(-1);
     }
     return line;
@@ -121,7 +122,7 @@ public class TalkingMachine {
   
   /**
   * Takes two teams as input, and show their content
-  * to our beloved user. God bless him.
+  * to our beloved user. May the emperor bless the user.
   */
   public void showResults(Team[] teams) {
     StringBuilder result = new StringBuilder();
@@ -144,13 +145,8 @@ public class TalkingMachine {
     System.out.println(result);
   }
   
-  public void close() {
-    try {
-      this.br.close();
-    }
-    catch (IOException e) {
-      System.out.println("Trouble when trying to close the BufferedReader : things do not look good for you, mate...");
-    }
+  public void close() throws IOException {
+    this.br.close();
   }
   
   /** Deprecated. Don't use please. Trying to call this function would EFFECTIVELY 
@@ -221,12 +217,12 @@ public class TalkingMachine {
     try {
       br.close();
     } catch (IOException e) {
-      System.out.println("EXPLOSIOOOONS, BAAAAM, BABOUM, CRRRASHBRBRBRLRBLR, EXPLOSIONS AND FIIIIRE !\n(... Couldn't close the BufferedReader," +
-      "this usually doesn't happen, you OBVIOUSLY didn't behave, so you deserved it. Hop.)(TalkingMachine, talk() method)");
+      System.out.println(EXPLOSION_CRASH + "(TalkingMachine, talk() method)");
       System.exit(-1);
     }
   }
 }
+
 
 
 

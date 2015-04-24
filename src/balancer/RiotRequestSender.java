@@ -62,12 +62,11 @@ public class RiotRequestSender {
   /*
   * Riot URL addresses
   */
-  //TODO: provide a better global stats URL, so we can add the different arguments and get all the ranked stats for all seasons.
-  // (For now, we only take into consideration the current season)
   private final static String DEV_KEY = "?api_key=SECRET_ENCRYPTED_HIDDEN_INVISIBLE_UNTOUCHABLE_KEY";
   private final static String NAME_URL = "https://euw.api.pvp.net/api/lol/euw/v1.4/summoner/by-name/";
   private final static String RECENT_URL = "https://euw.api.pvp.net/api/lol/euw/v1.3/game/by-summoner/";
   private final static String STATS_URL = "https://euw.api.pvp.net/api/lol/euw/v1.3/stats/by-summoner/";
+  private final static String TIERS_URL = "https://euw.api.pvp.net/api/lol/euw/v2.5/league/by-summoner/";
   
   // This one needs the different ranked adds we ought to put to the total URL.
   private final static String[] URL_ADDS_RANKED = {"&season=SEASON2015", "&season=SEASON3", "&season=SEASON2014"};
@@ -478,7 +477,20 @@ public class RiotRequestSender {
   public void debugNameById(long id) throws IOException {
     System.out.println(this.requestGet("https://euw.api.pvp.net/api/lol/euw/v1.4/summoner/" + id + DEV_KEY));
   }
+  
+  //TODO: put some vanishing powder here
+  public String debugIWantToSeeThisResult(long[] ids) throws IOException {
+    String id = "";
+    for (long l : ids) {
+      id += (l + ",");
+    }
+    id = id.substring(0, id.length()-1);
+    String result = this.requestGet(TIERS_URL + id + "/entry" + DEV_KEY);
+    //System.out.println(this.requestGet(TIERS_URL + id + DEV_KEY));    // Changed my mind. VERY bad idea.
+    return result;
+  }
 }
+
 
 
 

@@ -15,7 +15,7 @@ import exception.PlayerNameException;
 /**
 * Basically this is a debugging main for the IntraBalancer,
 * which lets us take a look at the performance score calculation alone.
-* It's still pretty funny to use though, but I think the code will be kinda ugly,
+* It's still pretty funny to use alone though, but I think the code will be kinda ugly,
 * I don't intend to spend much time on this here, thank you for your understanding,
 * happy birthday.
 */
@@ -83,6 +83,7 @@ public class SoloRiotScore {
     }    
   }
 }
+
 
 
 

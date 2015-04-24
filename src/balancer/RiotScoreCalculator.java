@@ -15,10 +15,10 @@ public class RiotScoreCalculator {
   private final static double RECENT_MINION_RATIO = 0.02;
   private final static double RECENT_NEXUS_RATIO = 5.0;
   private final static double RECENT_CC_RATIO = 0.01;
-  private final static double RECENT_WARDS_RATIO = 0.4;
+  private final static double RECENT_WARDS_RATIO = 0.7;
   private final static double RECENT_HEAL_RATIO = 0.0001;
   private final static double RECENT_WIN_RATIO = 2.0;
-  private final static double RECENT_MULTIPLIER = 0.7;
+  private final static double RECENT_MULTIPLIER = 0.25;
   
   // Total stats multipliers
   private final static double TOTAL_NORMAL_KILL_RATIO = 0.5;
@@ -32,29 +32,35 @@ public class RiotScoreCalculator {
   // number of losses)
   private final static double TOTAL_NORMAL_WIN_RATIO = 2.0;   
   
-  private final static double TOTAL_RANKED_DAMAGE_TAKEN_RATIO = 0.0001;
-  private final static double TOTAL_RANKED_DAMAGE_DONE_RATIO = 0.0001;
-  private final static double TOTAL_RANKED_HEAL_RATIO = 0.0002;
-  private final static double TOTAL_RANKED_MINION_RATIO = 0.0025;
-  private final static double TOTAL_RANKED_NEUTRAL_MINION_RATIO = 0.005;
-  private final static double TOTAL_RANKED_KILL_RATIO = 0.5;
-  private final static double TOTAL_RANKED_DEATH_RATIO = -0.5;
-  private final static double TOTAL_RANKED_ASSIST_RATIO = 0.3;
-  private final static double TOTAL_RANKED_PENTA_RATIO = 3.0;
-  private final static double TOTAL_RANKED_TURRET_RATIO = 0.6;
-  private final static double TOTAL_RANKED_WIN_DIFFERENCE_RATIO = 2000.0;
+  private final static double TOTAL_RANKED_MIN_GAMES_COUNT = 50.0;
+  private final static double TOTAL_RANKED_DEFAULT_RATIO = 0.002;
   
-  private final static double TOTAL_EXP_GAMES = 1.0;
-  private final static double TOTAL_EXP_KILLS = 0.1;
-  private final static double TOTAL_EXP_ASSISTS = 0.033;
-  private final static double TOTAL_EXP_MINIONS = 0.001;
-  private final static double TOTAL_EXP_NEUTRAL_MINIONS = 0.002;
-  private final static double TOTAL_EXP_TURRETS = 1.0;
-  private final static double TOTAL_EXP_DAMAGE_TAKEN = 0.0001;
-  private final static double TOTAL_EXP_DAMAGE_DONE = 0.0001;
-  private final static double TOTAL_EXP_HEAL = 0.0002;
-  private final static double TOTAL_EXP_PENTA = 2.0;
-  private final static double TOTAL_EXP_MULTIPLIER = 0.0005;
+  private final static double TOTAL_RANKED_DAMAGE_TAKEN_RATIO = 0.00001;
+  private final static double TOTAL_RANKED_DAMAGE_DONE_RATIO = 0.00001;
+  private final static double TOTAL_RANKED_HEAL_RATIO = 0.00002;
+  private final static double TOTAL_RANKED_MINION_RATIO = 0.00025;
+  private final static double TOTAL_RANKED_NEUTRAL_MINION_RATIO = 0.0005;
+  private final static double TOTAL_RANKED_KILL_RATIO = 0.3;
+  private final static double TOTAL_RANKED_DEATH_RATIO = -0.3;
+  private final static double TOTAL_RANKED_ASSIST_RATIO = 0.9;
+  private final static double TOTAL_RANKED_PENTA_RATIO = 0.5;
+  private final static double TOTAL_RANKED_TURRET_RATIO = 0.2;
+  private final static double TOTAL_RANKED_WIN_DIFFERENCE_RATIO = 1000.0;
+  private final static double TOTAL_RANKED_MULTIPLIER = 1.0;
+  
+  private final static double TOTAL_EXP_GAMES = 50.0;
+  private final static double TOTAL_EXP_KILLS = 5.0;
+  private final static double TOTAL_EXP_ASSISTS = 3.0;
+  private final static double TOTAL_EXP_MINIONS = 0.166;
+  private final static double TOTAL_EXP_NEUTRAL_MINIONS = 1.0;
+  private final static double TOTAL_EXP_TURRETS = 0.5;
+  private final static double TOTAL_EXP_DAMAGE_TAKEN = 0.0;
+  private final static double TOTAL_EXP_DAMAGE_DONE = 0.0;
+  private final static double TOTAL_EXP_HEAL = 0.0;
+  private final static double TOTAL_EXP_PENTA = 0.0;
+  private final static double TOTAL_EXP_MULTIPLIER = 0.00002;
+  
+  private final static double PERF_SCORE_MULTIPLIER = 1.5;
   
   // private HashMap<String,String> riotNames;
   private HashMap<String,Long> riotIds;
@@ -163,8 +169,9 @@ public class RiotScoreCalculator {
         
         double rankedGameNumber = totalStats.get(RiotRequestSender.TOTAL_RANKED_WON) + totalStats.get(RiotRequestSender.TOTAL_RANKED_LOSSES);
         double rankedWinDifference = totalStats.get(RiotRequestSender.TOTAL_RANKED_WON) - totalStats.get(RiotRequestSender.TOTAL_RANKED_LOSSES);
+        double rankedDifferenceRatio = (rankedGameNumber >= TOTAL_RANKED_MIN_GAMES_COUNT) ? rankedWinDifference / rankedGameNumber : TOTAL_RANKED_DEFAULT_RATIO;
         
-        double rankedOverallScore = (rankedWinDifference / rankedGameNumber) * TOTAL_RANKED_WIN_DIFFERENCE_RATIO
+        double rankedOverallScore = rankedDifferenceRatio * TOTAL_RANKED_WIN_DIFFERENCE_RATIO
           + totalStats.get(RiotRequestSender.TOTAL_RANKED_DAMAGE_TAKEN) * TOTAL_RANKED_DAMAGE_TAKEN_RATIO
           + totalStats.get(RiotRequestSender.TOTAL_RANKED_DAMAGE_DONE) * TOTAL_RANKED_DAMAGE_DONE_RATIO
           + totalStats.get(RiotRequestSender.TOTAL_RANKED_HEAL) * TOTAL_RANKED_HEAL_RATIO
@@ -176,6 +183,7 @@ public class RiotScoreCalculator {
           + totalStats.get(RiotRequestSender.TOTAL_RANKED_PENTA) * TOTAL_RANKED_PENTA_RATIO
           + totalStats.get(RiotRequestSender.TOTAL_RANKED_TURRETS) * TOTAL_RANKED_TURRET_RATIO;
         rankedOverallScore /= rankedGameNumber;
+        rankedOverallScore *= TOTAL_RANKED_MULTIPLIER;
         
         rankedOverallScore = (rankedOverallScore > 0) ? rankedOverallScore : 0;
         
@@ -184,7 +192,7 @@ public class RiotScoreCalculator {
         recentStats.put("Total recent score", recentScore);
         totalStats.put("Total experience score", experienceScore);
         
-        perfScore = (recentScore /*+ normalOverallScore*/ + rankedOverallScore + experienceScore);
+        perfScore = (recentScore /*+ normalOverallScore*/ + rankedOverallScore + experienceScore) * PERF_SCORE_MULTIPLIER;
       }
       group.setPerfValue(perfScore);    
     }
@@ -192,6 +200,7 @@ public class RiotScoreCalculator {
     return players;
   }
 }
+
 
 
 
