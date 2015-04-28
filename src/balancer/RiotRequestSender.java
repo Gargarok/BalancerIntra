@@ -18,7 +18,6 @@ public class RiotRequestSender {
   */
   private final static String[] RECENT_RELEVANT_MODES = {"NORMAL", "RANKED_SOLO_5x5", "RANKED_PREMADE_3x3", 
     "RANKED_PREMADE_5x5", "RANKED_TEAM_3x3", "RANKED_TEAM_5x5", "NORMAL_3x3", "ARAM_UNRANKED_5x5", "URF"};
-  private final static String[] RECENT_NOWARD_MODES = {"RANKED_PREMADE_3x3", "RANKED_TEAM_3x3", "NORMAL_3x3", "ARAM_UNRANKED_5x5"};
   public final static String RECENT_KILLS = "championsKilled";
   public final static String RECENT_ASSISTS = "assists";
   public final static String RECENT_DEATHS = "numDeaths";
@@ -37,7 +36,6 @@ public class RiotRequestSender {
   //private final static String[] TOTAL_RELEVANT_MODES = {"AramUnranked5x5", "RankedTeam3x3", "RankedPremade3x3", "Unranked3x3", 
     //         "RankedPremade5x5", "RankedSolo5x5", "RankedTeam5x5", "Unranked", "CAP5x5", "CounterPick", "URF"};
   private final static String[] TOTAL_RELEVANT_MODES = {"AramUnranked5x5", "Unranked3x3", "Unranked", "CAP5x5", "CounterPick", "URF"};
-  private final static String[] TOTAL_UNRANKED_MODES = {"AramUnranked5x5", "Unranked3x3", "Unranked", "CAP5x5", "CounterPick", "URF"};
   public final static String TOTAL_NORMAL_WINS = "wins";   
   public final static String TOTAL_NORMAL_KILLS = "totalChampionKills";
   public final static String TOTAL_NORMAL_ASSISTS = "totalAssists";
@@ -62,13 +60,13 @@ public class RiotRequestSender {
   /*
   * Riot URL addresses
   */
-  private final static String DEV_KEY = "?api_key=SECRET_ENCRYPTED_HIDDEN_INVISIBLE_UNTOUCHABLE_KEY";
+  private final static String DEV_KEY = "?api_key=ENCRYPTED_HIDDEN_SECRET_PROTECTED_BURROWED_INVISIBLE_KEY";
   private final static String NAME_URL = "https://euw.api.pvp.net/api/lol/euw/v1.4/summoner/by-name/";
   private final static String RECENT_URL = "https://euw.api.pvp.net/api/lol/euw/v1.3/game/by-summoner/";
   private final static String STATS_URL = "https://euw.api.pvp.net/api/lol/euw/v1.3/stats/by-summoner/";
   private final static String TIERS_URL = "https://euw.api.pvp.net/api/lol/euw/v2.5/league/by-summoner/";
   
-  // This one needs the different ranked adds we ought to put to the total URL.
+  // Different ranked adds we ought to put to the ranked-games URL.
   private final static String[] URL_ADDS_RANKED = {"&season=SEASON2015", "&season=SEASON3", "&season=SEASON2014"};
   
   /*
@@ -79,26 +77,11 @@ public class RiotRequestSender {
   
   // subType of the game (actually represents which kind of it is, we use it to know if there are wards or not)
     private final static String REGEX_RECENT_SUBTYPE = "\"subType\":\"(.*?)\",";      
-  
-  private final static String REGEX_RECENT_WARDSTAT = ".*?\"" + RECENT_WARDPLACED + "\":(.*?),";
-  
-  private final static String REGEX_RECENT_STATS_NOWARD = ".*?\"subType\":\".*?\"," +      // Every stat we need except the ward stat
-  ".*?\"" + RECENT_DEATHS + "\":(.*?)," +         // First group : Deaths
-  ".*?\"" + RECENT_MINIONS + "\":(.*?)," +         // etc
-  ".*?\"" + RECENT_KILLS + "\":(.*?)," +         
-  ".*?\"" + RECENT_WIN + "\":(.*?)," +         
-  ".*?\"" + RECENT_HEAL + "\":(.*?)," +         
-  ".*?\"" + RECENT_ASSISTS + "\":(.*?)," +        
-  ".*?\"" + RECENT_DAMAGE + "\":(.*?)," +         
-  ".*?\"" + RECENT_CC + "\":(.*?)";        // We don't need the last comma here, as the cc is the last field in riot request result
-  
+
   // Group 1 : contains all the data about one given match. Find each match by looking for
   // a pattern as follows : "gameId" <bla bla> [<bla>] <bip> {<beulululu>}} (without spaces)
   private final static String REGEX_RECENT_ALLSTATS = "(\"gameId\".*?\\[.*?\\].*?\\{.*?\\}\\})";
-  
-  // Extracts the summary containing all stats for all queue types
-  private final static String REGEX_GLOBAL_ALLSTATS = "\"playerStatSummaries\":([\\{.*?\\}])\\}";
-  
+
   private final static String REGEX_GLOBAL_PERQUEUE = "(\\{\"playerStatSummaryType\".*?\\{.*?\\}\\})";
   private final static String REGEX_GLOBAL_GAMETYPE = "\"playerStatSummaryType\":\"(.*?)\",";
   // This one get the stats for the id 0 champion, which contains the total stats for every champ.
@@ -108,13 +91,13 @@ public class RiotRequestSender {
   /*
   * Here we find the rate information : little and big rate.
   * Little rate is a max number of requests per given time (ex : 10 requests /s),
-  * and big rate is the same over a bigger time (ex : 500 requests /min).
+  * and big rate is the same over a wider window (ex : 500 requests /min).
   * Written in milliseconds here.
   */
-  private final static int LITTLE_RATE_NB = 9;    // 10
-  private final static int BIG_RATE_NB = 49;    //50
-  private final static int LITTLE_RATE_TIME = 10000;  // 10000
-  private final static int BIG_RATE_TIME = 60000;  // 60000
+  private final static int LITTLE_RATE_NB = 5;    // 10
+  private final static int LITTLE_RATE_TIME = 15000;  // 10000
+  private final static int BIG_RATE_NB = 20;    //500  
+  private final static int BIG_RATE_TIME = 70000;  // 600000
   private final static int SECURITY_SPACE = 100;
   
   private final static int HTTP_NOTFOUND = 404;
@@ -122,15 +105,11 @@ public class RiotRequestSender {
   private long[] requestsTime;
   private int cursor;
   private final HashSet<String> allRecentModes;
-  private final HashSet<String> noWardRecentModes;
   private final HashSet<String> totalStatsModes;
-  private final HashSet<String> totalUnrankedModes;
   
   public RiotRequestSender() { 
     this.allRecentModes = new HashSet<>(Arrays.asList(RECENT_RELEVANT_MODES));
-    this.noWardRecentModes = new HashSet<>(Arrays.asList(RECENT_NOWARD_MODES));
     this.totalStatsModes = new HashSet<>(Arrays.asList(TOTAL_RELEVANT_MODES));
-    this.totalUnrankedModes = new HashSet<>(Arrays.asList(TOTAL_UNRANKED_MODES));
     this.requestsTime = new long[BIG_RATE_NB];
     this.cursor = 0;
   }  
@@ -143,7 +122,7 @@ public class RiotRequestSender {
   public HashMap<String,Long> getSummonerId(String[] names) throws IOException {
     String nameConcat = "";
     for (String n : names) {
-      nameConcat += n + ",";
+      nameConcat += n.replace(" ", "") + ",";
     }
     nameConcat = nameConcat.substring(0,nameConcat.length()-1);
     //System.out.println("Searching for : " + nameConcat);

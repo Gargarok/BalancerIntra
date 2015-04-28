@@ -188,7 +188,7 @@ public class TalkingMachine {
           double value = Math.random()*40;     // Since the method is not used anymore, I wanted to add a funny part here.
           players[i] = new PlayerGroup(names[i], value);
         }
-        Team[] teams = balance.run(players);      // That is how the balancer used to work. Now everyone has a random value though, so it will be a bit funny.
+        Team[] teams = balance.run(players);      // That is how the balancer used to work. Now everyone has a random value though, so we can expect the result to be quite weird.
         StringBuilder result = new StringBuilder();
         result.append("I made the following selection : \n");
         result.append("Team A : ");
@@ -217,7 +217,7 @@ public class TalkingMachine {
     try {
       br.close();
     } catch (IOException e) {
-      System.out.println(EXPLOSION_CRASH + "(TalkingMachine, talk() method)");
+      System.out.println(EXPLOSION_CRASH + "(TalkingMachine, talk() method)\n(... I told you not to)\n(AND DID YOU LISTEN ?)");
       System.exit(-1);
     }
   }

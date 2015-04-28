@@ -3,24 +3,30 @@ package main;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.IOException;
+import java.util.Map;
+import java.util.Set;
 import java.util.HashMap;
+import java.util.HashSet;
 
-import balancer.PlayerGroup;
-import balancer.RiotRequestSender;
-import balancer.PerfScoreCalculator;
+public class FileParser {
+  private final static String PLAYER_SEPARATOR = ",";
+  private final static String PLAYER_EQUIVALENCE = "=";
+  private final static String VALUE_SEPARATOR = ":"
+  
+  public static Set<String> parseNames(String filePath) {
+    
+  } 
 
-/**
-* Basically this is a debugging main for the IntraBalancer,
-* which lets us take a look at the performance score calculation alone.
-* It's still pretty funny to use alone though, but I think the code will be kinda ugly,
-* I don't intend to spend much time on this here, thank you for your understanding,
-* happy birthday. 
-*/
-public class SoloRiotScore {
+  public static Map<String, Double> parsePlayerValues(String filePath) {
+    
+  }
+
+
   
   public static void main(String[] args) {
     RiotRequestSender sender = new RiotRequestSender();
-    PerfScoreCalculator calculator = new PerfScoreCalculator(sender);
+    PlayerGroup[] result;
+    RiotScoreCalculator calculator = new RiotScoreCalculator(sender);
     
     while(true) { 
       BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -43,7 +49,7 @@ public class SoloRiotScore {
       
       
       try {
-        calculator.associateRiotScore(new PlayerGroup[]{gp});
+        result = calculator.associateRiotScore(new PlayerGroup[]{gp});
         
         HashMap<String,Double> recentStats = calculator.getRecentStats();
         HashMap<String,Double> totalStats = calculator.getTotalStats();
@@ -72,8 +78,8 @@ public class SoloRiotScore {
         System.out.println(e.getMessage());
         System.exit(-1);
       }
-      catch (IllegalArgumentException e) {
-        System.out.println(e.getMessage());
+      catch (PlayerNameException e) {
+        System.out.println("\nPlayerNameException while calculating. As a result : \n - Either you mispelled the nickname or wrote nonsense on my input (... Bastard)\n - Either the player renamed (...Ago)\n - Either the player does not exist on this server (euw)");
         //System.exit(-2);
       }
     }    

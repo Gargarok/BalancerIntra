@@ -3,16 +3,13 @@ package main;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.IOException;
-import java.util.HashMap;
 
 import balancer.PlayerGroup;
 import balancer.RiotRequestSender;
-import balancer.RiotScoreCalculator;
+import balancer.PerfScoreCalculator;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
-
-import exception.PlayerNameException;
 
 public class TestMain {
   
@@ -56,7 +53,7 @@ public class TestMain {
       //PlayerGroup pg = new PlayerGroup("Vico", 0);
       PlayerGroup pg = new PlayerGroup("Anjali", 0);
       PlayerGroup[] group = new PlayerGroup[]{pg};
-      RiotScoreCalculator rsc = new RiotScoreCalculator(sender);
+      PerfScoreCalculator rsc = new PerfScoreCalculator(sender);
       group = rsc.associateRiotScore(group);
       //System.out.println("Score de Barbie : " + group[0].getPerfValue());
       //System.out.println("Score de Vico : " + group[0].getPerfValue());
@@ -71,8 +68,8 @@ public class TestMain {
     catch (IOException e) {
       System.exit(-1);
     } 
-    catch (PlayerNameException e) {
-        
+    catch (IllegalArgumentException e) {
+      System.out.println(e.getMessage());
     }
   }
 }
