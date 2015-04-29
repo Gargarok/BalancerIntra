@@ -73,8 +73,8 @@ public class IntraBalance {
     }
     
     //Now we can put the workers to work. Onwaaaards, my slave army of Java objects !
-    TalkingMachine tm = new TalkingMachine();
-    NameFormater nf = (initFromPath) ? new NameFormater(valuesPath) : new NameFormater();
+    NameFormater nf = (initFromPath && communityScore) ? new NameFormater(valuesPath) : new NameFormater();  // If the community score is not used, there is ZERO point to read the values from the input file
+    TalkingMachine tm = new TalkingMachine(System.out, nf.getPlayerValues().keySet());
     RiotRequestSender sender = new RiotRequestSender();
     Balancer balancer = new Balancer();
     PerfScoreCalculator superCalc = new PerfScoreCalculator(/*nf.getRiotNames(), */sender);

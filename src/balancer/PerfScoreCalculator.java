@@ -6,7 +6,6 @@ import java.util.HashSet;
 
 public class PerfScoreCalculator {  
   // Configuration constants
-  // Recent games stats multipliers
   private final static double RECENT_KILL_RATIO = 1.0;
   private final static double RECENT_ASSIST_RATIO = 0.33;
   private final static double RECENT_DEATH_RATIO = -1.0;
@@ -41,7 +40,7 @@ public class PerfScoreCalculator {
   private final static double TOTAL_EXP_MINIONS = 0.166;
   private final static double TOTAL_EXP_NEUTRAL_MINIONS = 1.0;
   private final static double TOTAL_EXP_TURRETS = 0.5;
-  private final static double TOTAL_EXP_DAMAGE_TAKEN = 0.0;
+  private final static double TOTAL_EXP_DAMAGE_TAKEN = 0.0;    // Not counted as these stats can only be accessed for ranked games
   private final static double TOTAL_EXP_DAMAGE_DONE = 0.0;
   private final static double TOTAL_EXP_HEAL = 0.0;
   private final static double TOTAL_EXP_PENTA = 0.0;
@@ -51,7 +50,6 @@ public class PerfScoreCalculator {
   
   private final static String NICK_EXCEPTION = "The given nickname does not seem to exist in League of Legends, on the given server. Nick : ";
   
-  // private HashMap<String,String> riotNames;
   private HashMap<String,Long> riotIds;
   private RiotRequestSender requestSender;
   
@@ -59,7 +57,6 @@ public class PerfScoreCalculator {
   private HashMap<String,Double> totalStats;
   
   public PerfScoreCalculator(RiotRequestSender sender) {
-    //this.riotNames = names;
     this.requestSender = sender;
     this.recentStats = new HashMap<>();
     this.totalStats = new HashMap<>();
@@ -75,7 +72,7 @@ public class PerfScoreCalculator {
   } 
   
   /**
-  * This method goes through the players field (array of PlayerGroup which is given in constructor)
+  * This method goes through the players parameter (array of PlayerGroup)
   * and gives to each group its corresponding riot score, after 
   * querying the riot server. Returns the resulting PlayerGroup array.
   * @throws IOException 
@@ -84,7 +81,7 @@ public class PerfScoreCalculator {
     HashSet<String> tmpNames = new HashSet<>();
     for(PlayerGroup pg : players) {
       for (String n : pg.getNames()) {
-        tmpNames.add(n);
+        tmpNames.add(n.toLowerCase().replace(" ", ""));
       }
     }
     String[] idParam = new String[tmpNames.size()];
@@ -99,15 +96,15 @@ public class PerfScoreCalculator {
     // Riot-format names
     for(PlayerGroup pg : players) {
       for (String n : pg.getNames()) {
-        if (!n.equals(n.toLowerCase()) && this.riotIds.containsKey(n.toLowerCase())) {
-          this.riotIds.put(n,this.riotIds.get(n.toLowerCase()));
-          this.riotIds.remove(n.toLowerCase());
+        if (!n.equals(n.toLowerCase().replace(" ", "")) && this.riotIds.containsKey(n.toLowerCase().replace(" ", ""))) {
+          this.riotIds.put(n,this.riotIds.get(n.toLowerCase().replace(" ", "")));
+          this.riotIds.remove(n.toLowerCase().replace(" ", ""));
         }
       }
     }
     
-    // Here we have an id association for every name in our groups.
-    // From there we can actually send the statistic requests to riot,
+    // Now we have an id association for every name in our groups.
+    // From there we can actually send the statistic requests to the Riot servers,
     // so we can calculate the performance score for every group.
     for (PlayerGroup group : players) {
       double perfScore = 0;

@@ -7,10 +7,12 @@ import java.io.IOException;
 import balancer.PlayerGroup;
 import balancer.RiotRequestSender;
 import balancer.PerfScoreCalculator;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 
+@SuppressWarnings("unused")
 public class TestMain {
   
   public static void main(String[] args) {

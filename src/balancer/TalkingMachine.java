@@ -3,6 +3,8 @@ package balancer;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintStream;
+import java.util.Set;
 
 /** 
 * This is a machine. Which can talk.
@@ -18,39 +20,14 @@ public class TalkingMachine {
     + "jump into the future, and take a look at what I will have become by then.";
   
   private final static String PLAYERS = "Here is the list of the players I know, which you can feed "
-    + "me with if you want to (other than these, it will need to be League of legends nicknames) : " 
-    + NameFormater.AGO + ", " 
-    + NameFormater.BAKAI + ", " 
-    + NameFormater.BARBIE + ", "
-    + NameFormater.BYA + ", " 
-    + NameFormater.CRISTA + ", " 
-    + NameFormater.DD + ", " 
-    + NameFormater.DELZUR + ", "
-    + NameFormater.DOYL + ", " 
-    + NameFormater.DRAHL + ", " 
-    + NameFormater.FLECHE + ", " 
-    + NameFormater.GARGA + ", " 
-    + NameFormater.HAMNISTIE + ", "
-    + NameFormater.HINO + ", " 
-    + NameFormater.IMMO + ", " 
-    + NameFormater.LUNIWA + ", "
-    + NameFormater.MELO + ", " 
-    + NameFormater.PEG + ", " 
-    + NameFormater.RIKOS + ", " 
-    + NameFormater.SAKO + ", " 
-    + NameFormater.SNAKEUH + ", " 
-    + NameFormater.STAZZ + ", " 
-    + NameFormater.SWIFTH + ", " 
-    + NameFormater.THIIB + ", " 
-    + NameFormater.VICO + ", " 
-    + NameFormater.WAUN + ", " 
-    + NameFormater.YAYIA + ".";
+    + "me with if you want to (other than these, it will need to be League of legends nicknames)(and, you"
+    + "can write these with any combination of lower/upper case, case insensitive here) : ";
   
   private final static String EXPLAIN = "\nPlease give me 10 player names so I can try to "
     + "balance something out. Separated by spaces, would be cool (actually if you don't do it, I won't work anyway). Enter \"exit\" to quit.\n";
   private final static String COMMUNITY_EXPLAIN = "If an unknown player is here and you want to specify a community score for him, " 
     + ", please compare him to another I know with an \"=\". For instance : \"NewGuy=Sako\". I will manage something with this. If "
-    + "only the riot performance points are taken into account, you can just ignore this previous statement though.";
+    + "only the performance points are taken into account, you can just ignore this previous statement though.";
   private final static String INPUT = "Input field : ";    
   private final static String INPUT_ERROR = "\nObviously, you didn't put the right number of people in there, comrade. "
     + "I need a pair number ! Try again please. (... Or maybe you did it on purpose ? You wouldn't "
@@ -69,9 +46,13 @@ public class TalkingMachine {
       "this usually doesn't happen, you OBVIOUSLY didn't behave, so you deserved it. Hop.)";
   
   private BufferedReader br;
+  private PrintStream output;
+  private final Set<String> knownNames;
   
-  public TalkingMachine() {
+  public TalkingMachine(PrintStream stream, Set<String> names) {
     this.br = new BufferedReader(new InputStreamReader(System.in));
+    this.output = stream;
+    this.knownNames = names;
   }
   
   /**
@@ -79,8 +60,11 @@ public class TalkingMachine {
   * the software is his friend. But it's actually a TRAP ! Beware the machines !
   */
   public void intro() {
-    System.out.println(WELCOME + "\n");
-    System.out.println(PLAYERS + "\n");
+    output.println(WELCOME + "\n");
+    output.println(PLAYERS);
+    for (String name : this.knownNames) {
+      output.print(name + ", ");
+    }
   }
   
   /**
@@ -89,9 +73,9 @@ public class TalkingMachine {
   public String ask() {
     String line = "";
     try {
-      System.out.println(EXPLAIN);
-      System.out.println(COMMUNITY_EXPLAIN);
-      System.out.print(INPUT);
+      output.println(EXPLAIN);
+      output.println(COMMUNITY_EXPLAIN);
+      output.print(INPUT);
       
       line = this.br.readLine();    
       if(line.equals("exit")) {   // Ugly, ugly, ugly. Ugly.
@@ -100,24 +84,24 @@ public class TalkingMachine {
       }
     }
     catch (IOException e) {
-      System.out.println(EXPLOSION_CRASH + "(TalkingMachine, ask() method)");
+      output.println(EXPLOSION_CRASH + "(TalkingMachine, ask() method)");
       System.exit(-1);
     }
     return line;
   }
   
   public void inputError() {
-    System.out.println(INPUT_ERROR);
+    output.println(INPUT_ERROR);
   }
   
   public void playerError() {
-    System.out.println(PLAYER_ERROR);
+    output.println(PLAYER_ERROR);
   }
   
   public void sorryError(String message) {
-    System.out.println(SORRY_ERROR);
-    System.out.println(message);
-    System.out.println(HTTP_MESSAGES);
+    output.println(SORRY_ERROR);
+    output.println(message);
+    output.println(HTTP_MESSAGES);
   }
   
   /**
@@ -142,7 +126,7 @@ public class TalkingMachine {
     }
     result.deleteCharAt(result.length()-2);
     result.append("\nTotal B value : " + teams[1].getValue());
-    System.out.println(result);
+    output.println(result);
   }
   
   public void close() throws IOException {

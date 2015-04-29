@@ -60,6 +60,7 @@ public class RiotRequestSender {
   /*
   * Riot URL addresses
   */
+  //ENCRYPTED_HIDDEN_SECRET_PROTECTED_BURROWED_INVISIBLE_KEY
   private final static String DEV_KEY = "?api_key=ENCRYPTED_HIDDEN_SECRET_PROTECTED_BURROWED_INVISIBLE_KEY";
   private final static String NAME_URL = "https://euw.api.pvp.net/api/lol/euw/v1.4/summoner/by-name/";
   private final static String RECENT_URL = "https://euw.api.pvp.net/api/lol/euw/v1.3/game/by-summoner/";
